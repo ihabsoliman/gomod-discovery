@@ -1,0 +1,29 @@
+{
+    "editor.tabSize": 4,
+    "[makefile]": {
+        "editor.insertSpaces": false,
+        "editor.detectIndentation": false,
+        "editor.tabSize": 4
+    },
+    "[python]": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "ms-python.black-formatter",
+        "editor.codeActionsOnSave": {
+            "source.organizeImports": "always"
+        }
+    },
+    "python.venvPath": ".venv",
+    "python.terminal.activateEnvInCurrentTerminal": true,
+    "python.terminal.activateEnvironment": true,
+    "python.formatting.provider": "black",
+    "flake8.enabled": true,
+    "flake8.args": [
+        "--ignore=W503",
+        "--max-line-length=150",
+        "--max-complexity=20"
+    ],
+    "python.analysis.typeCheckingMode": "basic",
+    "files.associations": {
+        "wrangler.json": "jsonc"
+    }
+}

@@ -1,0 +1,17 @@
+{
+	"name": "goproxy",
+	"version": "0.0.0",
+	"private": true,
+	"engines": {
+		"node": ">=23.9.0",
+		"npm": ">=10.9.0"
+	},
+	"scripts": {
+		"deploy": "wrangler deploy",
+		"dev": "wrangler dev",
+		"start": "wrangler dev"
+	},
+	"devDependencies": {
+		"wrangler": "^4.2.0"
+	}
+}
