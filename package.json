@@ -1,5 +1,5 @@
 {
-	"name": "goproxy",
+	"name": "gomod-discovery",
 	"version": "0.0.0",
 	"private": true,
 	"engines": {
