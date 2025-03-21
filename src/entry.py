@@ -1,6 +1,9 @@
 from js import Response, Object
 from pyodide.ffi import to_js as _to_js
 
+from urllib.parse import urlparse, urlunparse, parse_qs, ParseResult
+from typing import Optional
+
 from router import Router
 from log import get_logger
 
@@ -16,6 +19,19 @@ def to_js(obj):
     return _to_js(obj, dict_converter=Object.fromEntries)
 
 
+def parse_url(request_url: str) -> tuple[Optional[ParseResult], Optional[dict]]:
+    url = urlparse(request_url)
+    is_valid_url = bool(url.scheme and url.netloc) or url.path.startswith("/")
+    if not is_valid_url:
+        logger.debug(f"Invalid URL: {request_url}")
+        return None, None
+    params = parse_qs(url.query)
+    return url, params
+
+
+def strip_query_params(url: ParseResult) -> str:
+    return urlunparse(url._replace(query=""))
+
 
 def required_env_variables(env) -> bool:
     required_vars = ["GITHUB_ACCOUNT"]
@@ -24,19 +40,27 @@ def required_env_variables(env) -> bool:
         return False
     return True
 
+
 async def on_fetch(request, env):
     logger = get_logger(__name__, env.LOG_LEVEL)
     if not required_env_variables(env):
         return Response.new("", status=500)
 
+    url, params = parse_url(request.url)
+    if url is None:
+        return Response.new("Invalid URL", status=400)
+
+    logger.debug(f"Request URL: {strip_query_params(url)} with params: {params}")
     handler, params = router.match(request.url)
     if handler:
-        logger.debug(f"Handler found for URL: {request.url} with params: {params}")
+        logger.debug(
+            f"Handler found for URL: {strip_query_params(url)} with params: {params}"
+        )
         response = handler(**params)
         logger.debug(f"Response: {response}")
         return Response.json(to_js(response))
     else:
-        logger.debug(f"No handler found for URL: {request.url}")
+        logger.debug(f"No handler found for URL: {strip_query_params(url)}")
         return Response.new("Not found", status=404)
 
 
