@@ -49,9 +49,10 @@ async def on_fetch(request, env):
     url, params = parse_url(request.url)
     if url is None:
         return Response.new("Invalid URL", status=400)
-
+    request_method = request.method.upper()
+    logger.debug(f"Request method: {request_method}")
     logger.debug(f"Request URL: {strip_query_params(url)} with params: {params}")
-    handler, params = router.match(request.url)
+    handler, params = router.match(request.url, request_method)
     if handler:
         logger.debug(
             f"Handler found for URL: {strip_query_params(url)} with params: {params}"
@@ -64,19 +65,19 @@ async def on_fetch(request, env):
         return Response.new("Not found", status=404)
 
 
-@router.get("/")
+@router.route("/")
 def get_root():
     logger.debug("Handling get_root")
     return {"action": "get_root"}
 
 
-@router.get("/{module}/@latest")
+@router.route("/{module}/@latest")
 def get_latest_module(module: str):
     logger.debug(f"Handling get_latest_module for module: {module}")
     return {"action": "get_latest", "module": module}
 
 
-@router.get("/{module}/@v/latest")
+@router.route("/{module}/@v/latest")
 def get_latest_module_alt(module: str):
     logger.debug(f"Handling get_latest_module_alt for module: {module}")
     return {"action": "get_latest_alt", "module": module}
