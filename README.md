@@ -46,6 +46,8 @@ The project is built around a Python-based Cloudflare Worker with these main com
 - [Wrangler CLI](https://developers.cloudflare.com/workers/wrangler/install-and-update/)
 - Cloudflare account
 - Node.js and npm
+- Python
+- UV
 
 ### Setup
 
@@ -71,11 +73,6 @@ The project is built around a Python-based Cloudflare Worker with these main com
 Add this to your Go environment configuration:
 ```bash
 go env -w GOPRIVATE=<custom_domain>
-```
-
-For authenticated access:
-```bash
-git config --global url."https://username:token@github.com".insteadOf "https://github.com"
 ```
 
 Example of importing a private module:
