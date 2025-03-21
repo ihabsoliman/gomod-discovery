@@ -1,6 +1,6 @@
-[![CI](https://github.com/ihabsoliman/goproxy/actions/workflows/ci.yml/badge.svg)](https://github.com/ihabsoliman/goproxy/actions/workflows/ci.yml)
+[![CI](https://github.com/ihabsoliman/gomod-discovery/actions/workflows/ci.yml/badge.svg)](https://github.com/ihabsoliman/gomod-discovery/actions/workflows/ci.yml)
 
-# GoProxy - Private Go Module Discovery Service
+# Gogomod-discoveryroxy - Private Go Module Discovery Service
 
 A Cloudflare Worker-based service that enables using private Go modules from GitHub repositories with custom domain.
 
@@ -51,8 +51,8 @@ The project is built around a Python-based Cloudflare Worker with these main com
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/ihabsoliman/goproxy.git
-   cd goproxy
+   git clone https://github.com/ihabsoliman/gomod-discovery.git
+   cd gomod-discovery
    ```
 
 2. Install dependencies:
