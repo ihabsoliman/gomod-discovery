@@ -16,9 +16,19 @@ def to_js(obj):
     return _to_js(obj, dict_converter=Object.fromEntries)
 
 
+
+def required_env_variables(env) -> bool:
+    required_vars = ["GITHUB_ACCOUNT"]
+    if any(var not in env.as_object_map() for var in required_vars):
+        logger.error(f"Missing required environment variables: {required_vars}")
+        return False
+    return True
+
 async def on_fetch(request, env):
     logger = get_logger(__name__, env.LOG_LEVEL)
-    logger.debug(f"Received request: {request.url}")
+    if not required_env_variables(env):
+        return Response.new("", status=500)
+
     handler, params = router.match(request.url)
     if handler:
         logger.debug(f"Handler found for URL: {request.url} with params: {params}")

@@ -8,10 +8,10 @@ sync:
 	uv pip install --upgrade pip black flake8 pytest
 
 dev:
-	npx wrangler dev
+	npx wrangler dev --minify -e dev
 
 dev-ssl:
-	npx wrangler dev --local-protocol https --port 8443 --minify
+	npx wrangler dev --local-protocol https --port 8443 --minify -e dev
 
 test:
 	PYTHONPATH=src pytest tests
