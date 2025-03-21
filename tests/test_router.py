@@ -10,7 +10,7 @@ def router():
 
 
 def test_get_latest_module(router):
-    @router.get("/{module}/@latest")
+    @router.route("/{module}/@latest")
     def get_latest_module(module: str):
         return {"action": "get_latest", "module": module}
 
@@ -24,7 +24,7 @@ def test_get_latest_module(router):
 
 
 def test_get_list_versions(router):
-    @router.get("/{module}/@v/list")
+    @router.route("/{module}/@v/list")
     def get_list_versions(module: str):
         return {"action": "get_list_versions", "module": module}
 
@@ -38,7 +38,7 @@ def test_get_list_versions(router):
 
 
 def test_get_version_info(router):
-    @router.get("/{module}/@v/{version}.info")
+    @router.route("/{module}/@v/{version}.info")
     def get_version_info(module: str, version: str):
         return {"action": "get_version_info", "module": module, "version": version}
 

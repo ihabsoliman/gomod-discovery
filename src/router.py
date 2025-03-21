@@ -53,7 +53,7 @@ class Router:
         return decorator
 
     def match(
-        self, url: str, request_method: str
+        self, url: str, request_method: str = "GET"
     ) -> Tuple[Optional[Callable], Dict[str, str]]:
         parsed_url = urlparse(url)
         path = parsed_url.path
