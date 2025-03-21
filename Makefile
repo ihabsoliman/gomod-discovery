@@ -1,5 +1,3 @@
-# Makefile for building, testing, formatting, and linting the project
-
 .PHONY: all sync dev test format lint
 
 all: test format lint
