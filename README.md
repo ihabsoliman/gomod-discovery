@@ -2,7 +2,7 @@
 
 # GoProxy - Private Go Module Discovery Service
 
-A Cloudflare Worker-based service that enables using private Go modules from GitHub repositories with the `pkg.isoliman.sh` domain.
+A Cloudflare Worker-based service that enables using private Go modules from GitHub repositories with custom domain.
 
 ## Overview
 
@@ -16,7 +16,7 @@ This project deploys a Cloudflare Worker that handles Go's module discovery prot
 
 ### Planned Features (Not Yet Implemented)
 - **Go Module Discovery**: Handling the `go-get=1` protocol to redirect Go package imports to GitHub repositories
-- **Custom Domain Support**: Support for `pkg.isoliman.sh` domain for Go modules
+- **Custom Domain Support**: Support for custom domain for Go modules
 - **GitHub Integration**: Seamless linking between module imports and GitHub repositories
 - **Authentication**: Secure access to private modules
 
@@ -32,7 +32,7 @@ The project is built around a Python-based Cloudflare Worker with these main com
 
 ### How it Works
 
-1. When Go tries to download a module at `pkg.isoliman.sh/{pkg}`, it sends a request with `?go-get=1`
+1. When Go tries to download a module at `<domain>/{pkg}`, it sends a request with `?go-get=1`
 2. Our worker responds with HTML containing `<meta>` tags that direct Go to:
    - Use Git protocol
    - Point to the corresponding GitHub repository
@@ -70,7 +70,7 @@ The project is built around a Python-based Cloudflare Worker with these main com
 
 Add this to your Go environment configuration:
 ```bash
-go env -w GOPRIVATE=pkg.isoliman.sh
+go env -w GOPRIVATE=<custom_domain>
 ```
 
 For authenticated access:
@@ -80,7 +80,7 @@ git config --global url."https://username:token@github.com".insteadOf "https://g
 
 Example of importing a private module:
 ```go
-import "pkg.isoliman.sh/myproject"
+import "<custom_domain>/myproject"
 ```
 
 ## Development
