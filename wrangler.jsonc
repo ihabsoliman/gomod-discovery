@@ -4,7 +4,7 @@
  */
 {
 	"$schema": "node_modules/wrangler/config-schema.json",
-	"name": "goproxy",
+	"name": "gomod-discovery",
 	"main": "src/entry.py",
 	"assets": {
 		"directory": "./src"
