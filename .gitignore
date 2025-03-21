@@ -50,7 +50,7 @@ dist/
 *.pyo
 *.pyd
 __pycache__/
-*.pypirc
+tests/__pycache__/
 
 # Virtual environment
 venv/

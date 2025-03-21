@@ -1,6 +1,6 @@
 # Makefile for building, testing, formatting, and linting the project
 
-.PHONY: all dev test format lint
+.PHONY: all sync dev test format lint
 
 all: test format lint
 
@@ -12,8 +12,11 @@ sync:
 dev:
 	npx wrangler dev
 
+dev-ssl:
+	npx wrangler dev --local-protocol https --port 8443 --minify
+
 test:
-	pytest
+	PYTHONPATH=src pytest tests
 
 format:
 	black .

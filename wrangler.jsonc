@@ -6,12 +6,19 @@
 	"$schema": "node_modules/wrangler/config-schema.json",
 	"name": "goproxy",
 	"main": "src/entry.py",
+	"assets": {
+		"directory": "./src"
+	},
+	"base_dir": "./src",
+	"build": {
+		"watch_dir": "./src"
+	},
 	"compatibility_date": "2025-03-19",
 	"compatibility_flags": [
 		"python_workers"
 	],
 	"observability": {
-		"enabled": true
+		"enabled": false
 	},
 	/**
 	 * Smart Placement
@@ -30,7 +37,10 @@
 	 * Environment Variables
 	 * https://developers.cloudflare.com/workers/wrangler/configuration/#environment-variables
 	 */
-	"vars": { "MY_VARIABLE": "production_value" },
+	"vars": { 
+		"MY_VARIABLE": "production_value",
+		"LOG_LEVEL": "DEBUG"
+	},
 	/**
 	 * Note: Use secrets to store sensitive data.
 	 * https://developers.cloudflare.com/workers/configuration/secrets/
