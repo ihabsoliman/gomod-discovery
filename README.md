@@ -13,12 +13,9 @@ This project deploys a Cloudflare Worker that handles Go's module discovery prot
 ### Currently Implemented
 - Custom Router: A lightweight URL routing system for Python Cloudflare Workers
 - Basic endpoint handlers for Go module discovery
+- Handling the `go-get=1` protocol to redirect Go package imports to GitHub repositories
+- Support for custom domain for Go modules
 
-### Planned Features (Not Yet Implemented)
-- **Go Module Discovery**: Handling the `go-get=1` protocol to redirect Go package imports to GitHub repositories
-- **Custom Domain Support**: Support for custom domain for Go modules
-- **GitHub Integration**: Seamless linking between module imports and GitHub repositories
-- **Authentication**: Secure access to private modules
 
 ## Technical Details
 
@@ -99,12 +96,9 @@ import "<custom_domain>/myproject"
 
 ## Roadmap
 
-1. Implement Go module discovery handler
-2. Add support for authentication
-3. Add domain validation
-4. Implement caching for better performance
-5. Add monitoring and analytics
-6. Deploy to Cloudflare
+1. Add support for authentication
+2. Add monitoring and analytics
+3. Deploy to Cloudflare
 
 ## License
 
