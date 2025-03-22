@@ -3,7 +3,7 @@ from pyodide.ffi import to_js as _to_js
 from pyodide.ffi import JsProxy
 
 from urllib.parse import urlparse, urlunparse, parse_qs, ParseResult
-from typing import Optional
+from typing import Optional, Dict, Any
 from dataclasses import dataclass
 
 from router import Router
@@ -55,7 +55,14 @@ async def on_fetch(request, env):
 @router.route("/")
 def handle_root(route_request: RouteRequest):
     logger.debug("Handling handle_root")
-    return {"action": "handle_root"}
+    return Response.json(
+        to_js(
+            {
+                "status": "not found",
+            }
+        ),
+        status=404,
+    )
 
 
 @router.route("/{site}/{owner}/{project}")
@@ -77,26 +84,58 @@ def handle_module(route_request: RouteRequest, site: str, owner: str, project: s
         )
 
     domain = route_request.Url.netloc
-    github_account = route_request.Env.GITHUB_ACCOUNT
+    provider = route_request.Env.VERSION_CONTROL_PROVIDER
+    provider_account = route_request.Env.PROVIDER_ACCOUNT
+
+    # Prepare template context with all variables needed for rendering
+    template_context = {
+        "domain": domain,
+        "project": project,
+        "repository_url": f"https://{provider}.com/{provider_account}/{project}",
+    }
+
+    html_content = render_go_import_template(template_context)
 
     headers = Headers.new({"content-type": "text/html; charset=utf-8"}.items())
-    return Response.new(
-        f"""<!DOCTYPE html>
+    return Response.new(html_content, headers=headers)
+
+
+def render_go_import_template(context: Dict[str, Any]) -> str:
+    """
+    Renders the Go import HTML template with the provided context variables.
+
+    Args:
+        context (Dict[str, Any]): Dictionary with template variables
+            Required keys:
+            - domain: Domain name for the import path
+            - project: Go project name
+            - repository_url: Full URL to the Provider repository
+
+    Returns:
+        str: Rendered HTML content for Go module import
+    """
+    # Build the go-source meta content in parts to avoid exceeding line length
+    repo_url = context["repository_url"]
+    source_base = f"{context['domain']}/{context['project']} {repo_url}"
+    tree_url = f"{repo_url}/tree/master{{/dir}}"
+    blob_url = f"{repo_url}/blob/master{{/dir}}/{{file}}#L{{line}}"
+    go_source = f"{source_base} {tree_url} {blob_url}"
+
+    return f"""<!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8" />
-<meta name="go-import" content="{domain}/{project} git https://github.com/{github_account}/{project}">
-<meta name="go-source" content="{domain}/{project} https://github.com/{github_account}/{project} https://github.com/{github_account}/{project}/tree/master{{/dir}} https://github.com/{github_account}/{project}/blob/master{{/dir}}/{{file}}#L{{line}} ">
-<title>{project}</title>
+    <meta charset="UTF-8" />
+    <meta name="go-import" content="{context['domain']}/{context['project']} git {repo_url}">
+    <meta name="go-source" content="{go_source}">
+    <title>{context['project']} - Go Module Proxy</title>
 </head>
-
 <body>
-<a href=\"https://{domain}\">https://{domain}</a>
+    <h1>Go Module: {context['project']}</h1>
+    <p>This page is part of the Go Module Proxy service.</p>
+    <p>Repository: <a href="{repo_url}">{repo_url}</a></p>
+    <p>Import with: <code>import "{context['domain']}/{context['project']}"</code></p>
 </body>
-</html>
-        """,
-        headers=headers,
-    )
+</html>"""
 
 
 #########
@@ -153,7 +192,7 @@ def required_env_variables(env) -> bool:
     Returns:
         bool: True if all required environment variables are set, False otherwise.
     """
-    required_vars = ["GITHUB_ACCOUNT"]
+    required_vars = ["VERSION_CONTROL_PROVIDER", "PROVIDER_ACCOUNT"]
     if any(var not in env.as_object_map() for var in required_vars):
         logger.error(f"Missing required environment variables: {required_vars}")
         return False
