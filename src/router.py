@@ -1,15 +1,36 @@
 import re
 from urllib.parse import urlparse
-from typing import Callable, Dict, List, Tuple, Optional, Pattern
+from typing import Callable, Dict, List, Optional, Pattern, NamedTuple
 from log import get_logger
 
 # Configure logging
 logger = get_logger(__name__)
 
 
+class Route(NamedTuple):
+    """
+    Represents a route with its regex pattern, HTTP method, handler function,
+    and parameter names.
+    """
+
+    regex: Pattern[str]
+    method: str
+    func: Callable
+    param_names: List[str]
+
+
+class RouteMatch(NamedTuple):
+    """
+    Represents a successful route match with the handler function and parameters.
+    """
+
+    func: Callable
+    params: Dict[str, str]
+
+
 class Router:
     def __init__(self) -> None:
-        self.routes: List[Tuple[Pattern[str], str, Callable, List[str]]] = []
+        self.routes: List[Route] = []
 
     def route(self, pattern: str, method: str = "GET") -> Callable:
         """
@@ -47,14 +68,13 @@ class Router:
         logger.debug(f"Registered route: {pattern} with regex: {regex_pattern}")
 
         def decorator(func: Callable) -> Callable:
-            self.routes.append((compiled_regex, method.upper(), func, param_names))
+            route = Route(compiled_regex, method.upper(), func, param_names)
+            self.routes.append(route)
             return func
 
         return decorator
 
-    def match(
-        self, url: str, request_method: str = "GET"
-    ) -> Tuple[Optional[Callable], Dict[str, str]]:
+    def match(self, url: str, request_method: str = "GET") -> Optional[RouteMatch]:
         parsed_url = urlparse(url)
         path = parsed_url.path
         logger.debug(f"Matching URL: {url} with path: {path}")
@@ -74,7 +94,7 @@ class Router:
                 logger.debug(
                     f"Match found: {func.__name__} {method} with params: {params}"
                 )
-                return func, params
+                return RouteMatch(func, params)
 
         logger.warning(f"No match found for URL: {url}")
-        return None, {}
+        return None
