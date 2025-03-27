@@ -1,6 +1,6 @@
 import re
 from urllib.parse import urlparse
-from typing import Callable, Dict, List, Tuple, Optional, Pattern, NamedTuple
+from typing import Callable, Dict, List, Optional, Pattern, NamedTuple
 from log import get_logger
 
 # Configure logging
