@@ -58,6 +58,5 @@ def test_get_version_info(router):
 
 
 def test_not_found(router):
-    handler, params = router.match("/nonexistent/path")
-    assert handler is None
-    assert params == {}
+    route_match = router.match("/nonexistent/path")
+    assert route_match is None
