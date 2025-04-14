@@ -12,7 +12,7 @@
 		"start": "wrangler dev"
 	},
 	"devDependencies": {
-		"wrangler": "^4.4.0",
+		"wrangler": "^4.10.0",
 		"esbuild": ">=0.25.0",
 		"cookie": ">=0.7.0"
 	}
