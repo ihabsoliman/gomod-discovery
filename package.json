@@ -13,7 +13,7 @@
 	},
 	"devDependencies": {
 		"wrangler": "^4.20.5",
-		"esbuild": ">=0.25.5",
+		"esbuild": ">=0.27.2",
 		"cookie": ">=1.1.1"
 	}
 }
